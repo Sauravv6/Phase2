@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Survey</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+      body {
+        background: linear-gradient(135deg, #333232, #31005c);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        color: white;
+      }
+      .container {
+        background: rgba(255, 255, 255, 0.15);
+        padding: 30px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 600px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(12px);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 8px;
+      }
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      select {
+        appearance: none;
+        cursor: pointer;
+      }
+
+      .radio-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 5px;
+      }
+      .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        transition: 0.3s;
+      }
+      .radio-group label:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      input[type="radio"] {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border: 2px solid white;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        transition: 0.3s;
+      }
+      input[type="radio"]:checked {
+        background: white;
+        box-shadow: 0 0 4px white;
+      }
+      select {
+        appearance: none;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+      }
+
+      select:focus,
+      select:hover {
+        background: rgba(255, 255, 255, 0.3);
+        color: black;
+      }
+
+      option {
+        background: white;
+        color: black;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        border: none;
+        background: #ff4081;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      button:hover {
+        background: #d81b60;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Technical Survey</h2>
+      <form>
+        <div class="form-group">
+          <label for="name">Full Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age Group:</label>
+          <select id="age" name="age">
+            <option value="under18">Under 18</option>
+            <option value="18-25">18-25</option>
+            <option value="26-35">26-35</option>
+            <option value="36-50">36-50</option>
+            <option value="above50">Above 50</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tech_interest">Favorite Tech Field:</label>
+          <select id="tech_interest" name="tech_interest">
+            <option value="AI">Artificial Intelligence</option>
+            <option value="Cloud">Cloud Computing</option>
+            <option value="Cybersecurity">Cybersecurity</option>
+            <option value="Blockchain">Blockchain</option>
+            <option value="IoT">Internet of Things</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Preferred Programming Language:</label>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="language" value="Python" />
+              Python</label
+            >
+            <label
+              ><input type="radio" name="language" value="JavaScript" />
+              JavaScript</label
+            >
+            <label
+              ><input type="radio" name="language" value="Java" /> Java</label
+            >
+            <label
+              ><input type="radio" name="language" value="C++" /> C++</label
+            >
+            <label
+              ><input type="radio" name="language" value="Other" /> Other</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>How do you stay updated on tech?</label>
+          <div class="radio-group">
+            <label
+              ><input type="radio" name="source" value="Blogs" /> Tech
+              Blogs</label
+            >
+            <label
+              ><input type="radio" name="source" value="Podcasts" />
+              Podcasts</label
+            >
+            <label
+              ><input type="radio" name="source" value="Videos" />
+              YouTube</label
+            >
+            <label
+              ><input type="radio" name="source" value="Courses" /> Online
+              Courses</label
+            >
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="feedback">Any additional feedback?</label>
+          <textarea
+            id="feedback"
+            name="feedback"
+            rows="4"
+            placeholder="Your thoughts..."
+          ></textarea>
+        </div>
+
+        <button type="submit">Submit Survey</button>
+      </form>
+    </div>
+  </body>
+</html>

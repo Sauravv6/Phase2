@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+        }
+        form { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            width: 350px; 
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        input, textarea, button { 
+            width: 100%; 
+            margin: 10px 0; 
+            padding: 12px; 
+            font-size: 16px; 
+            border-radius: 8px; 
+            border: 1px solid #ccc;
+        }
+        textarea { 
+            resize: none; 
+            height: 100px; 
+        }
+        button { 
+            background: #6a11cb; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 18px; 
+            font-weight: bold; 
+            transition: 0.3s;
+        }
+        button:hover { 
+            background: #4a00e0; 
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <label>Name</label>
+        <input type="text" placeholder="Enter your name">
+        
+        <label>Email</label>
+        <input type="email" placeholder="Enter your email">
+        
+        <label>Message</label>
+        <textarea placeholder="Enter your message"></textarea>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

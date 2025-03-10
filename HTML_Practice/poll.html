@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poll Form</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background: linear-gradient(135deg, #011216, #3d444d); 
+            color: white;
+        }
+        form { 
+            background: rgba(255, 255, 255, 0.1); 
+            padding: 30px; 
+            border-radius: 12px; 
+            width: 350px; 
+            box-shadow: 0px 5px 15px rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        h2 { 
+            margin-bottom: 20px; 
+        }
+        .options { 
+            display: flex; 
+            flex-direction: column; 
+            margin-top: 10px;
+        }
+        label { 
+            display: flex; 
+            align-items: center; 
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px; 
+            margin: 5px 0;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+        label:hover { 
+            background: rgba(255, 255, 255, 0.3); 
+        }
+        input[type="radio"] { 
+            appearance: none; 
+            width: 18px; 
+            height: 18px; 
+            border: 2px solid white; 
+            border-radius: 50%;
+            outline: none; 
+            margin-right: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+        input[type="radio"]:checked { 
+            background: white; 
+        }
+        button { 
+            background: #ff4081; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-size: 18px; 
+            padding: 12px; 
+            width: 100%; 
+            border-radius: 8px; 
+            margin-top: 15px; 
+            transition: 0.3s;
+        }
+        button:hover { 
+            background: #d81b60; 
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <h2>Which is your favourite programming language?</h2>
+        <div class="options">
+            <label><input type="radio" name="platform" value="Python"> Python</label>
+            <label><input type="radio" name="platform" value="Javascript"> Javascript</label>
+            <label><input type="radio" name="platform" value="C++"> C++</label>
+            <label><input type="radio" name="platform" value="Java"> Java</label>
+        </div>
+        <button type="submit">Vote</button>
+    </form>
+</body>
+</html>
