@@ -1,0 +1,65 @@
+package com.quiz.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
+import com.quiz.bean.Quiz;
+import com.quiz.bean.Question;
+import com.quiz.dao.QuizDAO;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+public class QuizServiceImpl implements QuizService {
+
+    @Autowired
+    private QuizDAO quizDAO;
+
+    @Autowired
+    private QuestionClient questionClient;
+
+    private static final String QUESTION_SERVICE = "questionService";  // Circuit Breaker Name
+
+    @Override
+    public Quiz add(Quiz quiz) {
+        return quizDAO.save(quiz);
+    }
+
+    @Override
+    public List<Quiz> get() {
+        List<Quiz> quizzes = quizDAO.findAll();
+
+        return quizzes.stream().map(quiz -> {
+            quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId())); 
+            return quiz;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Quiz get(Long id) {
+        Quiz quiz = quizDAO.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId()));
+        return quiz;
+    }
+
+    // Circuit Breaker with Fallback
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "questionServiceFallback")
+    public List<Question> getQuestionsWithCircuitBreaker(Long quizId) {
+        log.info("Fetching questions for Quiz ID: " + quizId);
+        return questionClient.getQuestionOfQuiz(quizId);
+    }
+
+    // Fallback Method
+    public List<Question> questionServiceFallback(Long quizId, Exception e) {
+        log.error("Question Service is down! Returning fallback response.", e);
+        
+        List<Question> fallbackQuestions = new ArrayList<>();
+        fallbackQuestions.add(new Question(0L, "No Questions Available", quizId));
+
+        return fallbackQuestions;
+    }
+}

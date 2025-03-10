@@ -1,0 +1,23 @@
+package com.demo;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class HelloWorldConfiguration {
+
+    @Bean(name = "CustomAgeBeanName")
+    public int age1() {
+        return 23;
+    }
+
+    @Bean(name = "CustomAgeBeanName")
+    public int age2() {
+        return 43;
+    }
+
+    @Bean
+    public int someValue(int CustomAgeBeanName) {
+        return CustomAgeBeanName;
+    }
+}

@@ -1,0 +1,5 @@
+package com.wipro.bean;
+
+public class Product {
+
+}

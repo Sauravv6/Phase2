@@ -1,0 +1,55 @@
+package com.quiz.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.quiz.bean.Quiz;
+import com.quiz.dao.QuizDAO;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class QuizServiceImpl implements QuizService {
+	
+	@Autowired
+    private QuizDAO quizDAO;
+
+//    private QuestionClient questionClient;
+
+//    public QuizServiceImpl(QuizRepository quizRepository, QuestionClient questionClient) {
+//        this.quizRepository = quizRepository;
+//        this.questionClient = questionClient;
+//    }
+
+    @Override
+    public Quiz add(Quiz quiz) {
+        return quizDAO.save(quiz);
+    }
+
+    @Override
+    public List<Quiz> get() {
+        List<Quiz> quizzes = quizRepository.findAll();
+
+        List<Quiz> newQuizList = quizzes.stream().map(quiz -> {
+            quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+            return quiz;
+        }).collect(Collectors.toList());
+
+        return newQuizList;
+    }
+
+    @Override
+    public Quiz get(Long id) {
+
+        Quiz quiz = quizRepository.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+        return quiz;
+    }
+
+	@Override
+	public Quiz add(Quiz quiz) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+}

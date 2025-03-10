@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="MavenCheckoutLocationPage">
+		<list key="scmUrl">
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+	<section name="MavenProjectWizardLocationPage">
+		<list key="location">
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+	<section name="MavenProjectImportWizardPage">
+		<list key="rootDirectory">
+			<item value="D:\Phase2\QUIZAPP\QuizService"/>
+			<item value="D:\Phase2\QUIZAPP\QuestionService"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\kafka-producer-service"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\config-server"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\api-gateway"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\service-registry"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\department-service"/>
+			<item value="D:\Phase2\springboot with cloud microservices\springboot with cloud microservices\user-service"/>
+		</list>
+		<list key="projectNameTemplate">
+			<item value="[artifactId]"/>
+			<item value="[artifactId]-TRUNK"/>
+			<item value="[artifactId]-[version]"/>
+			<item value="[groupId].[artifactId]"/>
+			<item value="[groupId].[artifactId]-[version]"/>
+			<item value="[name]"/>
+		</list>
+	</section>
+</section>

@@ -1,0 +1,65 @@
+package com.question.controller;
+
+import org.springframework.web.bind.annotation.*;
+import com.question.bean.Question;
+import com.question.service.QuestionService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Collections;
+import java.util.List;
+
+@RestController
+@RequestMapping("/question")
+@Slf4j
+public class QuestionController {
+
+    private static final String QUESTION_SERVICE = "questionService";
+    private QuestionService questionService;
+
+    public QuestionController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    //    create
+    @PostMapping
+    public Question create(@RequestBody Question question) {
+        return questionService.create(question);
+    }
+
+    //    get all
+    @GetMapping
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "getAllFallback")
+    public List<Question> getAll() {
+        return questionService.get();
+    }
+
+    @GetMapping("/{questionId}")
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "getQuestionByIdFallback")
+    public Question getAll(@PathVariable Long questionId) {
+        return questionService.getOne(questionId);
+    }
+
+    //    get all question of specific quiz
+    @GetMapping("/quiz/{quizId}")
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "getQuestionsOfQuizFallback")
+    public List<Question> getQuestionsOfQuiz(@PathVariable Long quizId) {
+        return questionService.getQuestionsOfQuiz(quizId);
+    }
+
+    // **Fallback Methods**
+    public List<Question> getAllFallback(Exception e) {
+        log.error("Question Service is down, returning fallback response", e);
+        return Collections.emptyList();  // Empty list as fallback
+    }
+
+    public Question getQuestionByIdFallback(Long questionId, Exception e) {
+        log.error("Failed to fetch question, returning default question", e);
+        return new Question(0L, "No Question Available", 0L);
+    }
+
+    public List<Question> getQuestionsOfQuizFallback(Long quizId, Exception e) {
+        log.error("Failed to fetch questions for quiz, returning empty list", e);
+        return Collections.emptyList();
+    }
+}

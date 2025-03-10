@@ -1,0 +1,24 @@
+package com.demo;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+@SpringBootApplication
+public class DemoApplication {
+
+	public static void main(String[] args) {
+//		SpringApplication.run(DemoApplication.class, args);
+//		
+//		var context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);
+//        System.out.println("context.getBean(\"someValue\") => " + context.getBean("someValue"));
+		
+		SpringApplication application = new SpringApplication(DemoApplication.class);
+        application.setAllowBeanDefinitionOverriding(true); // ✅ Enable bean overriding
+        ConfigurableApplicationContext context = application.run(args);
+
+        System.out.println("context.getBean(\"someValue\") => " + context.getBean("someValue"));
+        
+	}
+
+}

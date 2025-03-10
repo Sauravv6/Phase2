@@ -1,0 +1,66 @@
+package com.quiz.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
+import com.quiz.bean.Quiz;
+import com.quiz.dao.QuizDAO;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class QuizServiceImpl implements QuizService {
+
+    private static final String QUESTION_SERVICE = "questionService";
+
+    @Autowired
+    private QuizDAO quizDAO;
+
+    @Autowired
+    private QuestionClient questionClient;
+
+    @Override
+    public Quiz add(Quiz quiz) {
+        return quizDAO.save(quiz);
+    }
+
+    @Override
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "questionServiceFallback")
+    public List<Quiz> get() {
+        List<Quiz> quizzes = quizDAO.findAll();
+
+        return quizzes.stream().map(quiz -> {
+            quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+            return quiz;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "singleQuizFallback")
+    public Quiz get(Long id) {
+        Quiz quiz = quizDAO.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setQuestions(questionClient.getQuestionOfQuiz(quiz.getId()));
+        return quiz;
+    }
+
+    // **Fallback for `get()` returning list of quizzes**
+    public List<Quiz> questionServiceFallback(Exception e) {
+        System.out.println("⚠️ Question Service is down, returning empty question list.");
+        List<Quiz> quizzes = quizDAO.findAll();
+        return quizzes.stream().map(quiz -> {
+            quiz.setQuestions(Collections.emptyList());  // Empty questions
+            return quiz;
+        }).collect(Collectors.toList());
+    }
+
+    // **Fallback for `get(Long id)` returning single quiz**
+    public Quiz singleQuizFallback(Long id, Exception e) {
+        System.out.println("⚠️ Question Service is down, returning quiz without questions.");
+        Quiz quiz = quizDAO.findById(id).orElseThrow(() -> new RuntimeException("Quiz not found"));
+        quiz.setQuestions(Collections.emptyList());  // Empty questions
+        return quiz;
+    }
+}

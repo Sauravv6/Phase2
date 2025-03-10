@@ -1,0 +1,65 @@
+package com.quiz.service;
+
+import com.quiz.bean.Quiz;
+import com.quiz.bean.Question;
+import com.quiz.dao.QuizDAO;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class QuizServiceImpl implements QuizService {
+
+    private final QuizDAO quizDAO;
+    private final QuestionClient questionClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
+
+    public QuizServiceImpl(QuizDAO quizRepository, QuestionClient questionClient, CircuitBreakerFactory circuitBreakerFactory) {
+        this.quizDAO = quizRepository;
+        this.questionClient = questionClient;
+        this.circuitBreakerFactory = circuitBreakerFactory;
+    }
+
+    @Override
+    public Quiz add(Quiz quiz) {
+        return quizDAO.save(quiz);
+    }
+
+    @Override
+    public List<Quiz> get() {
+        return quizDAO.findAll().stream()
+                .map(quiz -> {
+                    quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId()));
+                    return quiz;
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Quiz get(Long id) {
+        Quiz quiz = quizDAO.findById(id)
+                .orElseThrow(() -> new RuntimeException("Quiz not found"));
+
+        quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId()));
+
+        return quiz;
+    }
+
+    public List<Question> getQuestionsWithCircuitBreaker(Long quizId) {
+        return circuitBreakerFactory.create("questionService").run(
+                () -> questionClient.getQuestionOfQuiz(quizId),
+                throwable -> fallbackForGetQuestions(quizId)
+        );
+    }
+
+    public List<Question> fallbackForGetQuestions(Long quizId) {
+        Question defaultQuestion = new Question();
+        defaultQuestion.setQuestionId(0L);
+        defaultQuestion.setQuestion("No Question");
+        defaultQuestion.setQuizId(quizId);
+
+        return Collections.singletonList(defaultQuestion);
+    }
+}

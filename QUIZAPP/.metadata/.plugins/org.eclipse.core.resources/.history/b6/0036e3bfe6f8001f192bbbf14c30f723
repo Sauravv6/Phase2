@@ -1,0 +1,72 @@
+package com.quiz.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import lombok.extern.slf4j.Slf4j;
+import com.quiz.bean.Quiz;
+import com.quiz.bean.Question;
+import com.quiz.dao.QuizDAO;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+public class QuizServiceImpl implements QuizService {
+
+    @Autowired
+    private QuizDAO quizDAO;
+
+    @Autowired
+    private QuestionClient questionClient;
+
+    private static final String QUESTION_SERVICE = "questionService";  // Circuit Breaker Name
+
+    @Override
+    public Quiz add(Quiz quiz) {
+        return quizDAO.save(quiz);
+    }
+
+    @Override
+    public List<Quiz> get() {
+        List<Quiz> quizzes = quizDAO.findAll();
+        return quizzes.stream().map(quiz -> {
+            quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId())); 
+            return quiz;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Quiz get(Long id) {
+        Quiz quiz = quizDAO.findById(id)
+                .orElseThrow(() -> new RuntimeException("Quiz not found with ID: " + id));
+        quiz.setQuestions(getQuestionsWithCircuitBreaker(quiz.getId()));
+        return quiz;
+    }
+
+    // ✅ Circuit Breaker Applied
+    @CircuitBreaker(name = QUESTION_SERVICE, fallbackMethod = "questionServiceFallback")
+    public List<Question> getQuestionsWithCircuitBreaker(Long quizId) {
+        log.info("📡 Fetching questions for Quiz ID: {}", quizId);
+        try {
+            List<Question> questions = questionClient.getQuestionOfQuiz(quizId);
+            log.info("✅ Successfully fetched {} questions for Quiz ID: {}", questions.size(), quizId);
+            return questions;
+        } catch (Exception e) {
+            log.error("❌ Error fetching questions for Quiz ID: {}. Circuit Breaker should trigger now!", quizId, e);
+            throw e;  // Ensure Circuit Breaker catches this exception
+        }
+    }
+
+    // ✅ Fallback Method (Trigger when Question Service is Down)
+    public List<Question> questionServiceFallback(Long quizId, Throwable t) {
+        log.warn("⚠️ Circuit Breaker Triggered for Quiz ID: {}! Returning Fallback Response.", quizId, t);
+        
+        List<Question> fallbackQuestions = new ArrayList<>();
+        fallbackQuestions.add(new Question(0L, "No Questions Available", quizId));
+
+        return fallbackQuestions;
+    }
+}

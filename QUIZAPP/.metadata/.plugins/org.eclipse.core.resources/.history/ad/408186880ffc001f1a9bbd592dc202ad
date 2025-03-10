@@ -1,0 +1,5 @@
+package com.bootstrap.service;
+
+public class UserServiceImpl {
+
+}

@@ -1,0 +1,14 @@
+package com.quiz.service;
+
+import com.quiz.bean.Question;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
+
+@FeignClient(name = "QUESTION-SERVICE", path = "/question")
+public interface QuestionClient {
+
+    @GetMapping("/quiz/{quizId}")
+    List<Question> getQuestions(@PathVariable Long quizId);
+}

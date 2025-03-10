@@ -1,0 +1,24 @@
+package com.quiz.bean;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL) 
+public class Question {
+    private  Long questionId;
+    private  String question;
+    private  Long quizId;
+}
+
+
+
+

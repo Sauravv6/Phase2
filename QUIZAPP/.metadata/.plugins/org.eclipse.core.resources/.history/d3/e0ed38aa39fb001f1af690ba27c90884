@@ -1,0 +1,31 @@
+package com.demo;
+
+import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+
+@SpringBootApplication
+public class DemoApplication {
+
+	public static void main(String[] args) {
+//		SpringApplication.run(DemoApplication.class, args);
+//		
+//		var context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class);
+//        System.out.println("context.getBean(\"someValue\") => " + context.getBean("someValue"));
+		
+		ConfigurableApplicationContext context = SpringApplication.run(DemoApplication.class, args);
+        System.out.println("context.getBean(\"someValue\") => " + context.getBean("someValue"));
+    }
+
+    // ✅ Manually force-enable bean overriding
+	 @Bean
+	    public static BeanFactoryPostProcessor allowBeanOverriding() {
+	        return (ConfigurableListableBeanFactory beanFactory) -> 
+	            ((SpringApplication) beanFactory).setAllowBeanDefinitionOverriding(true);
+	    }
+        
+	}
+

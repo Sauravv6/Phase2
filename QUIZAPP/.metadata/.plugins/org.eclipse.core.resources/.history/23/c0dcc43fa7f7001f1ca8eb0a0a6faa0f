@@ -1,0 +1,5 @@
+package com.quiz.bean;
+
+public class Quiz {
+
+}
